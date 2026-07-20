@@ -198,7 +198,10 @@
   信号库 · 持续收录 · 收录标准见顶部，每条精读为客观摘评，非原文镜像 · 点击「阅读原文」回到来源
 </footer>
 
-<script src="data.js"></script>
+<script>
+  // data.js is small and updated independently; cache-bust it so new entries appear immediately.
+  document.write(`<script src="data.js?v=${Date.now()}"><\/script>`);
+</script>
 <script>
 const ENTRIES = Array.isArray(window.ENTRIES) ? window.ENTRIES : [];
 const CATS = ['全部', ...Array.from(new Set(ENTRIES.map(e=>e.cat)))];
