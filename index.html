@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信号库 — 聚焦结构的智能增量</title>
+<style>
+  :root{
+    --paper:#f6f3ec;
+    --paper-deep:#efe9dc;
+    --ink:#262220;
+    --ink-soft:#5c5650;
+    --ink-faint:#9b948a;
+    --signal:#d4480f;
+    --signal-soft:#f0d9c8;
+    --line:#dcd4c4;
+    --mono:'SF Mono','Menlo','Consolas',monospace;
+    --serif:'Songti SC','Noto Serif SC','PingFang SC',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--serif);
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:'';
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0.012) 1px, transparent 1px, transparent 3px);
+    pointer-events:none;
+    z-index:1000;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  /* waveform divider */
+  .wave{
+    width:100%;height:18px;
+    background-repeat:repeat-x;
+    background-size:36px 18px;
+    opacity:0.5;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18'><path d='M0 9 L6 9 L9 1 L13 17 L17 9 L36 9' fill='none' stroke='%23d4480f' stroke-width='1.2'/></svg>");
+  }
+
+  header{
+    max-width:760px;margin:0 auto;padding:64px 24px 32px;
+  }
+  .kicker{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.12em;
+    color:var(--signal);text-transform:uppercase;margin-bottom:18px;
+  }
+  h1{
+    font-size:34px;font-weight:600;line-height:1.4;letter-spacing:0.01em;
+    margin-bottom:20px;
+  }
+  .thesis{
+    font-size:16px;color:var(--ink-soft);max-width:620px;
+    border-left:2px solid var(--signal);padding-left:16px;
+    margin-bottom:28px;
+  }
+  .standard{
+    font-family:var(--mono);font-size:12.5px;color:var(--ink-faint);
+    background:var(--paper-deep);border:1px solid var(--line);
+    padding:14px 16px;border-radius:2px;line-height:1.8;
+  }
+  .standard b{color:var(--ink-soft);}
+
+  main{max-width:760px;margin:0 auto;padding:0 24px 100px;}
+
+  .section-title{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.1em;
+    color:var(--ink-faint);text-transform:uppercase;
+    margin:48px 0 4px;
+  }
+  .section-sub{font-size:13px;color:var(--ink-faint);margin-bottom:18px;}
+
+  .card{
+    border:1px solid var(--line);
+    background:#fdfbf6;
+    border-radius:3px;
+    margin-bottom:14px;
+    cursor:pointer;
+    transition:border-color .15s ease;
+    overflow:hidden;
+  }
+  .card:hover{border-color:var(--signal);}
+  .card-head{padding:18px 20px 16px;}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;}
+  .card-title{font-size:17px;font-weight:600;line-height:1.45;}
+  .new-badge{
+    display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:700;
+    letter-spacing:0.08em;color:#fdfbf6;background:var(--signal);
+    padding:1px 6px;border-radius:8px;vertical-align:2px;
+    margin-right:8px;text-transform:uppercase;
+  }
+  .card-title-en{
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);
+    font-weight:400;line-height:1.4;margin-top:3px;
+  }
+  .card-meta{
+    font-family:var(--mono);font-size:11px;color:var(--ink-faint);
+    margin-top:6px;display:flex;gap:10px;flex-wrap:wrap;
+  }
+  .card-meta span:not(:last-child)::after{content:'·';margin-left:10px;color:var(--line);}
+  .card-abstract{font-size:14px;color:var(--ink-soft);margin-top:10px;}
+
+  .signal-meter{
+    display:flex;align-items:center;gap:5px;flex-shrink:0;white-space:nowrap;
+  }
+  .signal-meter .bars{display:flex;gap:2px;}
+  .signal-meter .bar{width:4px;height:12px;background:var(--line);border-radius:1px;}
+  .signal-meter .bar.on{background:var(--signal);}
+  .signal-meter .label{font-family:var(--mono);font-size:10px;color:var(--ink-faint);}
+
+  .card-body{
+    display:none;
+    padding:0 20px 22px;
+    border-top:1px dashed var(--line);
+    margin-top:0;
+  }
+  .card.open .card-body{display:block;}
+  .card.open{border-color:var(--signal);}
+
+  .body-block{margin-top:18px;}
+  .body-block h4{
+    font-family:var(--mono);font-size:11px;letter-spacing:0.08em;
+    color:var(--signal);text-transform:uppercase;margin-bottom:8px;
+  }
+  .body-block p{font-size:14.5px;color:var(--ink);line-height:1.85;}
+  .body-block p + p{margin-top:10px;}
+
+  /* structured core */
+  .core-list{list-style:none;}
+  .core-list li{font-size:14.5px;line-height:1.8;margin-top:11px;}
+  .core-list li:first-child{margin-top:2px;}
+  .core-list .k{
+    color:var(--signal);font-family:var(--mono);font-size:10.5px;
+    letter-spacing:0.05em;text-transform:uppercase;
+    display:block;margin-bottom:2px;
+  }
+  .core-list .v{color:var(--ink);}
+
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;}
+  .tag{
+    font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);
+    background:var(--signal-soft);padding:3px 8px;border-radius:10px;
+  }
+
+  .source-link{
+    display:inline-flex;align-items:center;gap:6px;
+    margin-top:16px;font-family:var(--mono);font-size:12px;
+    color:var(--signal);border-bottom:1px solid var(--signal);
+    padding-bottom:2px;
+  }
+  .source-link:hover{opacity:0.7;}
+
+  footer{
+    max-width:760px;margin:0 auto;padding:40px 24px 80px;
+    font-family:var(--mono);font-size:11px;color:var(--ink-faint);
+    border-top:1px solid var(--line);line-height:1.9;
+  }
+  .filter-bar{
+    display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;
+  }
+  .filter-btn{
+    font-family:var(--mono);font-size:11.5px;
+    border:1px solid var(--line);background:transparent;
+    padding:6px 12px;border-radius:14px;color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .filter-btn.active{background:var(--signal);color:#fdfbf6;border-color:var(--signal);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">信号库 / Signal Archive</div>
+  <h1>智能的增量，来自结构与计算</h1>
+  <div class="thesis">
+    一个持续收录「应用案例 + 通用/统一理论」的公开阅读清单。主线只有一句：智能的增量不来自更强的底层模型，而来自外部结构——语义层、世界模型、计算本身——如何被组织和利用。
+  </div>
+  <div class="standard">
+    <b>收录标准</b> — 一句话：收"道"，不收"术"。无论是应用案例、统一理论、还是有趣到能引发思考的东西，判准只有一个——读完是否在原理 / 视角 / 应用层面有可迁移的收获。形式不限（工程博客、论文预印本、X thread、公众号长文）。
+  </div>
+</header>
+
+<main>
+  <div class="filter-bar" id="filterBar"></div>
+  <div id="sections"></div>
+</main>
+
+<footer>
+  信号库 · 持续收录 · 收录标准见顶部，每条精读为客观摘评，非原文镜像 · 点击「阅读原文」回到来源
+</footer>
+
+<script src="data.js"></script>
+<script>
+const ENTRIES = Array.isArray(window.ENTRIES) ? window.ENTRIES : [];
+const CATS = ['全部', ...Array.from(new Set(ENTRIES.map(e=>e.cat)))];
+let activeCat = '全部';
+
+function signalBars(n){
+  let bars = '';
+  for(let i=1;i<=5;i++){
+    bars += `<div class="bar ${i<=n?'on':''}"></div>`;
+  }
+  return `<div class="signal-meter"><div class="bars">${bars}</div><div class="label">SIG·${n}/5</div></div>`;
+}
+
+function dateVal(d){
+  const m = String(d).match(/^(\d{4})(?:-(\d{2}))?$/);
+  if(!m) return 0;
+  return parseInt(m[1])*100 + (m[2] ? parseInt(m[2]) : 12);
+}
+
+const NEW_DAYS = 3;  // added 距今 ≤ 此天数 → 显示「新增」角标，过后自动消失
+function isNew(e){
+  if(!e.added) return false;
+  const t = Date.parse(String(e.added) + 'T00:00:00');
+  if(isNaN(t)) return false;
+  const days = (Date.now() - t) / 86400000;
+  return days >= 0 && days <= NEW_DAYS;
+}
+
+function coreHTML(core){
+  if(Array.isArray(core)){
+    return `<ul class="core-list">${core.map(c=>`<li><span class="k">${c.k}</span><span class="v">${c.v}</span></li>`).join('')}</ul>`;
+  }
+  return `<p>${core}</p>`;
+}
+
+function render(){
+  const bar = document.getElementById('filterBar');
+  bar.innerHTML = CATS.map(c=>`<button class="filter-btn ${c===activeCat?'active':''}" data-cat="${c}">${c}</button>`).join('');
+  bar.querySelectorAll('.filter-btn').forEach(b=>{
+    b.onclick = ()=>{ activeCat = b.dataset.cat; render(); };
+  });
+
+  const list = (activeCat==='全部' ? ENTRIES : ENTRIES.filter(e=>e.cat===activeCat))
+    .slice().sort((a,b)=>dateVal(b.date)-dateVal(a.date));
+  const wrap = document.getElementById('sections');
+  wrap.innerHTML = `
+    <div class="section-title">收录条目 · ${list.length}</div>
+    <div class="section-sub">点击卡片展开中文精读 · 按时间倒序</div>
+    ${list.map(e=>`
+      <div class="card" id="card-${e.id}">
+        <div class="card-head" onclick="toggle('${e.id}')">
+          <div class="card-top">
+            <div>
+              <div class="card-title">${isNew(e)?'<span class="new-badge">新增</span>':''}${e.title}</div>
+              ${e.title_en ? `<div class="card-title-en">${e.title_en}</div>` : ''}
+              <div class="card-meta"><span>${e.org}</span><span>${e.date}</span><span>${e.cat}</span></div>
+            </div>
+            ${signalBars(e.signal)}
+          </div>
+          <div class="card-abstract">${e.abstract}</div>
+        </div>
+        <div class="card-body">
+          <div class="wave"></div>
+          <div class="body-block">
+            <h4>为什么收录</h4>
+            <p>${e.why}</p>
+          </div>
+          <div class="body-block">
+            <h4>核心内容</h4>
+            ${coreHTML(e.core)}
+          </div>
+          <div class="body-block">
+            <h4>评价</h4>
+            <p>${e.verdict}</p>
+          </div>
+          <div class="tags">${e.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+          <a class="source-link" href="${e.url}" target="_blank" rel="noopener">阅读原文 →</a>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function toggle(id){
+  document.getElementById('card-'+id).classList.toggle('open');
+}
+
+render();
+</script>
+</body>
+</html>
