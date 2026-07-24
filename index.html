@@ -174,6 +174,25 @@
     cursor:pointer;
   }
   .filter-btn.active{background:var(--signal);color:#fdfbf6;border-color:var(--signal);}
+  .archive-summary{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;}
+  .pagination{
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    margin:28px 0 8px;
+  }
+  .pagination.top{justify-content:flex-end;margin:0 0 18px;}
+  .page-btn{
+    min-width:32px;height:30px;padding:0 8px;
+    font-family:var(--mono);font-size:11px;color:var(--ink-soft);
+    border:1px solid var(--line);border-radius:3px;background:transparent;cursor:pointer;
+  }
+  .page-btn:hover:not(:disabled){border-color:var(--signal);color:var(--signal);}
+  .page-btn.active{background:var(--signal);border-color:var(--signal);color:#fdfbf6;}
+  .page-btn:disabled{opacity:.38;cursor:not-allowed;}
+  .page-ellipsis{font-family:var(--mono);font-size:12px;color:var(--ink-faint);padding:0 2px;}
+  @media (max-width:520px){
+    .pagination.top{justify-content:center;margin-top:12px;}
+    .archive-summary{gap:4px;}
+  }
 </style>
 </head>
 <body>
@@ -206,6 +225,8 @@
 const ENTRIES = Array.isArray(window.ENTRIES) ? window.ENTRIES : [];
 const CATS = ['全部', ...Array.from(new Set(ENTRIES.map(e=>e.cat)))];
 let activeCat = '全部';
+let activePage = 1;
+const PAGE_SIZE = 8;
 
 function signalBars(n){
   let bars = '';
@@ -237,20 +258,60 @@ function coreHTML(core){
   return `<p>${core}</p>`;
 }
 
+function pageItems(current, total){
+  if(total <= 7) return Array.from({length:total}, (_, i)=>i+1);
+  const items = [1];
+  if(current > 4) items.push('…');
+  for(let page=Math.max(2, current-1); page<=Math.min(total-1, current+1); page++) items.push(page);
+  if(current < total-3) items.push('…');
+  items.push(total);
+  return items;
+}
+
+function paginationHTML(page, total, position){
+  if(total <= 1) return '';
+  return `<nav class="pagination ${position}" aria-label="条目分页">
+    <button class="page-btn" data-page="${page-1}" ${page===1?'disabled':''} aria-label="上一页">←</button>
+    ${pageItems(page, total).map(item=>item==='…'
+      ? '<span class="page-ellipsis" aria-hidden="true">…</span>'
+      : `<button class="page-btn ${item===page?'active':''}" data-page="${item}" ${item===page?'aria-current="page"':''}>${item}</button>`
+    ).join('')}
+    <button class="page-btn" data-page="${page+1}" ${page===total?'disabled':''} aria-label="下一页">→</button>
+  </nav>`;
+}
+
+function bindPagination(){
+  document.querySelectorAll('[data-page]').forEach(button=>{
+    button.onclick = ()=>{
+      activePage = Number(button.dataset.page);
+      render();
+      document.getElementById('sections').scrollIntoView({behavior:'smooth', block:'start'});
+    };
+  });
+}
+
 function render(){
   const bar = document.getElementById('filterBar');
   bar.innerHTML = CATS.map(c=>`<button class="filter-btn ${c===activeCat?'active':''}" data-cat="${c}">${c}</button>`).join('');
   bar.querySelectorAll('.filter-btn').forEach(b=>{
-    b.onclick = ()=>{ activeCat = b.dataset.cat; render(); };
+    b.onclick = ()=>{ activeCat = b.dataset.cat; activePage = 1; render(); };
   });
 
   const list = (activeCat==='全部' ? ENTRIES : ENTRIES.filter(e=>e.cat===activeCat))
     .slice().sort((a,b)=>dateVal(b.date)-dateVal(a.date));
+  const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  activePage = Math.min(activePage, totalPages);
+  const pageList = list.slice((activePage-1) * PAGE_SIZE, activePage * PAGE_SIZE);
   const wrap = document.getElementById('sections');
   wrap.innerHTML = `
-    <div class="section-title">收录条目 · ${list.length}</div>
-    <div class="section-sub">点击卡片展开中文精读 · 按时间倒序</div>
-    ${list.map(e=>`
+    <div class="archive-summary">
+      <div>
+        <div class="section-title">收录条目 · ${list.length}</div>
+        <div class="section-sub">点击卡片展开中文精读 · 按时间倒序 · 每页 ${PAGE_SIZE} 条</div>
+      </div>
+      ${paginationHTML(activePage, totalPages, 'top')}
+    </div>
+    ${pageList.map(e=>`
       <div class="card" id="card-${e.id}">
         <div class="card-head" onclick="toggle('${e.id}')">
           <div class="card-top">
@@ -282,7 +343,9 @@ function render(){
         </div>
       </div>
     `).join('')}
+    ${paginationHTML(activePage, totalPages, 'bottom')}
   `;
+  bindPagination();
 }
 
 function toggle(id){
