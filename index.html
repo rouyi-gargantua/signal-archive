@@ -298,7 +298,10 @@ function render(){
   });
 
   const list = (activeCat==='全部' ? ENTRIES : ENTRIES.filter(e=>e.cat===activeCat))
-    .slice().sort((a,b)=>dateVal(b.date)-dateVal(a.date));
+    .slice().sort((a,b)=>{
+      const freshness = Number(isNew(b)) - Number(isNew(a));
+      return freshness || dateVal(b.date)-dateVal(a.date);
+    });
   const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
   activePage = Math.min(activePage, totalPages);
   const pageList = list.slice((activePage-1) * PAGE_SIZE, activePage * PAGE_SIZE);
@@ -307,7 +310,7 @@ function render(){
     <div class="archive-summary">
       <div>
         <div class="section-title">收录条目 · ${list.length}</div>
-        <div class="section-sub">点击卡片展开中文精读 · 按时间倒序 · 每页 ${PAGE_SIZE} 条</div>
+        <div class="section-sub">新增条目置顶，其余按时间倒序 · 每页 ${PAGE_SIZE} 条</div>
       </div>
       ${paginationHTML(activePage, totalPages, 'top')}
     </div>
