@@ -45,16 +45,21 @@
   }
 
   header{
-    max-width:760px;margin:0 auto;padding:64px 24px 32px;
+    max-width:1100px;margin:0 auto;padding:72px 24px 52px;
   }
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(330px,.92fr);gap:64px;align-items:center;}
+  .hero-copy h1{font-size:clamp(34px,4.4vw,60px);line-height:1.28;margin-bottom:24px;}
+  .hero-art{height:min(66vh,600px);position:relative;overflow:hidden;border:1px solid var(--line);background:rgba(253,251,246,.58);}
+  .hero-art img{width:100%;height:100%;object-fit:cover;object-position:50% 62%;mix-blend-mode:multiply;transform:scale(1.06);}
+  .hero-count{position:absolute;right:14px;top:14px;display:grid;justify-items:end;color:var(--signal);font-family:var(--mono);line-height:1;}
+  .hero-count span{font-size:8px;letter-spacing:.14em;}.hero-count b{font-size:28px;font-weight:400;margin:5px 0;}
+  .enter-link{display:inline-flex;gap:24px;color:var(--signal);font-family:var(--mono);font-size:11px;letter-spacing:.08em;border-bottom:1px solid var(--signal);padding-bottom:3px;margin-top:26px;}
+  .standard{grid-column:1/-1;margin-top:0;}
   .kicker{
     font-family:var(--mono);font-size:12px;letter-spacing:0.12em;
     color:var(--signal);text-transform:uppercase;margin-bottom:18px;
   }
-  h1{
-    font-size:34px;font-weight:600;line-height:1.4;letter-spacing:0.01em;
-    margin-bottom:20px;
-  }
+  h1{font-size:34px;font-weight:600;line-height:1.4;letter-spacing:0.01em;margin-bottom:20px;}
   .thesis{
     font-size:16px;color:var(--ink-soft);max-width:620px;
     border-left:2px solid var(--signal);padding-left:16px;
@@ -189,26 +194,61 @@
   .page-btn.active{background:var(--signal);border-color:var(--signal);color:#fdfbf6;}
   .page-btn:disabled{opacity:.38;cursor:not-allowed;}
   .page-ellipsis{font-family:var(--mono);font-size:12px;color:var(--ink-faint);padding:0 2px;}
+  .opening{position:fixed;inset:0;z-index:2000;background:var(--paper);display:grid;grid-template-columns:minmax(320px,1fr) minmax(360px,1fr);align-items:center;overflow:hidden;transition:opacity .65s ease,visibility .65s ease;}
+  .opening.is-hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  .opening-copy{justify-self:end;width:min(500px,80%);position:relative;z-index:2;}
+  .opening-copy h2{font-size:clamp(50px,6vw,84px);font-weight:500;line-height:1.18;letter-spacing:.02em;margin:22px 0 26px;}
+  .opening-copy p:not(.kicker){color:var(--ink-soft);font-size:15px;}
+  .opening-enter{margin-top:34px;border:1px solid var(--signal);background:var(--signal);color:#fffaf2;padding:12px 20px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;cursor:pointer;}
+  .opening-enter:hover{background:transparent;color:var(--signal);}
+  .opening img{width:min(620px,48vw);height:94vh;object-fit:contain;justify-self:start;mix-blend-mode:multiply;}
+  .opening-mobile-enter{display:none;}
+  @media (max-width:760px){
+    header{padding:52px 20px 36px;}.hero-grid{grid-template-columns:1fr;gap:36px;}.hero-copy h1{font-size:40px;}.hero-art{height:60vh;max-height:560px;}.standard{grid-column:auto;}.enter-link{margin-top:22px;}
+    .opening{display:block;}.opening-copy{position:absolute;left:22px;right:22px;top:7vh;width:auto;}.opening-copy h2,.opening-copy p:not(.kicker),.opening-copy .opening-enter{display:none;}.opening img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 53%;}.opening-mobile-enter{display:block;position:absolute;left:50%;bottom:max(38px,7vh);transform:translateX(-50%);z-index:2;white-space:nowrap;}
+  }
   @media (max-width:520px){
     .pagination.top{justify-content:center;margin-top:12px;}
     .archive-summary{gap:4px;}
+    .hero-copy h1{font-size:34px;}.hero-art{height:54vh;}.thesis{font-size:14px;}
   }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.opening{transition:none;}}
 </style>
 </head>
 <body>
 
+<section class="opening" id="opening" aria-label="信号库开场">
+  <div class="opening-copy">
+    <div class="kicker">信号库 / Signal Archive</div>
+    <h2>从噪声里，<br>留下结构</h2>
+    <p>智能的增量，不只来自更强的模型。<br>它来自结构与计算如何被组织。</p>
+    <button class="opening-enter" type="button" onclick="enterArchive()">进入信号库　↓</button>
+  </div>
+  <img src="assets/signal-poster.webp" alt="噪声经过结构窗口，显现为橙色知识枝杈">
+  <button class="opening-enter opening-mobile-enter" type="button" onclick="enterArchive()">进入信号库　↓</button>
+</section>
+
 <header>
-  <div class="kicker">信号库 / Signal Archive</div>
-  <h1>智能的增量，来自结构与计算</h1>
-  <div class="thesis">
-    一个持续收录「应用案例 + 通用/统一理论」的公开阅读清单。主线只有一句：智能的增量不来自更强的底层模型，而来自外部结构——语义层、世界模型、计算本身——如何被组织和利用。
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="kicker">信号库 / Signal Archive</div>
+      <h1>智能的增量，<br>来自结构与计算</h1>
+      <div class="thesis">
+        一个持续收录「应用案例 + 通用/统一理论」的公开阅读清单。寻找模型之外，那些真正产生智能增量的外部结构。
+      </div>
+      <a class="enter-link" href="#archive">开始阅读 <span>↓</span></a>
+    </div>
+    <div class="hero-art" role="img" aria-label="信号从噪声中被提取为结构">
+      <img src="assets/signal-poster.webp" alt="">
+      <div class="hero-count"><span>ARCHIVE</span><b id="entryCount">000</b><span>ENTRIES</span></div>
+    </div>
   </div>
   <div class="standard">
     <b>收录标准</b> — 一句话：收"道"，不收"术"。无论是应用案例、统一理论、还是有趣到能引发思考的东西，判准只有一个——读完是否在原理 / 视角 / 应用层面有可迁移的收获。形式不限（工程博客、论文预印本、X thread、公众号长文）。
   </div>
 </header>
 
-<main>
+<main id="archive">
   <div class="filter-bar" id="filterBar"></div>
   <div id="sections"></div>
 </main>
@@ -227,6 +267,18 @@ const CATS = ['全部', ...Array.from(new Set(ENTRIES.map(e=>e.cat)))];
 let activeCat = '全部';
 let activePage = 1;
 const PAGE_SIZE = 8;
+
+document.getElementById('entryCount').textContent = String(ENTRIES.length).padStart(3, '0');
+
+function enterArchive(){
+  sessionStorage.setItem('signal-archive-entered', '1');
+  document.getElementById('opening').classList.add('is-hidden');
+  setTimeout(()=>document.getElementById('archive').scrollIntoView({behavior:'smooth', block:'start'}), 280);
+}
+
+if(sessionStorage.getItem('signal-archive-entered')){
+  document.getElementById('opening').classList.add('is-hidden');
+}
 
 function signalBars(n){
   let bars = '';
