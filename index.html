@@ -86,12 +86,18 @@
     background:#fdfbf6;
     border-radius:3px;
     margin-bottom:14px;
-    cursor:pointer;
     transition:border-color .15s ease;
     overflow:hidden;
   }
   .card:hover{border-color:var(--signal);}
   .card-head{padding:18px 20px 16px;}
+  .card-toggle{display:block;width:100%;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;}
+  .card-toggle:focus-visible,.source-link:focus-visible{outline:2px solid var(--signal);outline-offset:4px;}
+  .card-top > span:first-child{min-width:0;}
+  .card-title,.card-title-en,.card-abstract{display:block;overflow-wrap:anywhere;}
+  .card-head .source-link{margin-top:12px;}
+  .source-unavailable{display:inline-block;font-size:12px;color:var(--ink-soft);margin-top:12px;}
+  .card-body[hidden]{display:none;}
   .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;}
   .card-title{font-size:17px;font-weight:600;line-height:1.45;}
   .new-badge{
@@ -118,6 +124,7 @@
     display:flex;align-items:center;gap:5px;flex-shrink:0;white-space:nowrap;
   }
   .signal-meter .bars{display:flex;gap:2px;}
+  .signal-meter .label{display:block;}
   .signal-meter .bar{width:4px;height:12px;background:var(--line);border-radius:1px;}
   .signal-meter .bar.on{background:var(--signal);}
   .signal-meter .label{font-family:var(--mono);font-size:10px;color:var(--ink-faint);}
@@ -280,12 +287,27 @@ if(sessionStorage.getItem('signal-archive-entered')){
   document.getElementById('opening').classList.add('is-hidden');
 }
 
-function signalBars(n){
+function escapeHTML(value){
+  return String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function sourceLink(value){
+  try{
+    const url = new URL(String(value));
+    if(!['http:', 'https:'].includes(url.protocol)) throw new Error('Unsupported source URL');
+    return `<a class="source-link" href="${escapeHTML(url.href)}" target="_blank" rel="noopener noreferrer">阅读原文 →</a>`;
+  }catch{
+    return '<span class="source-unavailable">原文链接暂不可用</span>';
+  }
+}
+
+function signalBars(value){
+  const n = Number.isInteger(value) && value >= 1 && value <= 5 ? value : 0;
   let bars = '';
   for(let i=1;i<=5;i++){
-    bars += `<div class="bar ${i<=n?'on':''}"></div>`;
+    bars += `<span class="bar ${i<=n?'on':''}"></span>`;
   }
-  return `<div class="signal-meter"><div class="bars">${bars}</div><div class="label">SIG·${n}/5</div></div>`;
+  return `<span class="signal-meter" title="信号评分衡量可迁移价值，不代表证据可信度"><span class="bars" aria-hidden="true">${bars}</span><span class="label">SIG·${n}/5</span></span>`;
 }
 
 function dateVal(d){
@@ -294,10 +316,10 @@ function dateVal(d){
   return parseInt(m[1])*100 + (m[2] ? parseInt(m[2]) : 12);
 }
 
-const NEW_DAYS = 3;  // added 距今 ≤ 此天数 → 显示「新增」角标，过后自动消失
+const NEW_DAYS = 7;  // added 距今 ≤ 此天数 → 显示「新增」角标，过后自动消失
 function isNew(e){
   if(!e.added) return false;
-  const t = Date.parse(String(e.added) + 'T00:00:00');
+  const t = Date.parse(String(e.added) + 'T00:00:00+08:00');
   if(isNaN(t)) return false;
   const days = (Date.now() - t) / 86400000;
   return days >= 0 && days <= NEW_DAYS;
@@ -305,9 +327,9 @@ function isNew(e){
 
 function coreHTML(core){
   if(Array.isArray(core)){
-    return `<ul class="core-list">${core.map(c=>`<li><span class="k">${c.k}</span><span class="v">${c.v}</span></li>`).join('')}</ul>`;
+    return `<ul class="core-list">${core.map(c=>`<li><span class="k">${escapeHTML(c.k)}</span><span class="v">${escapeHTML(c.v)}</span></li>`).join('')}</ul>`;
   }
-  return `<p>${core}</p>`;
+  return `<p>${escapeHTML(core)}</p>`;
 }
 
 function pageItems(current, total){
@@ -344,7 +366,7 @@ function bindPagination(){
 
 function render(){
   const bar = document.getElementById('filterBar');
-  bar.innerHTML = CATS.map(c=>`<button class="filter-btn ${c===activeCat?'active':''}" data-cat="${c}">${c}</button>`).join('');
+  bar.innerHTML = CATS.map(c=>`<button class="filter-btn ${c===activeCat?'active':''}" data-cat="${escapeHTML(c)}">${escapeHTML(c)}</button>`).join('');
   bar.querySelectorAll('.filter-btn').forEach(b=>{
     b.onclick = ()=>{ activeCat = b.dataset.cat; activePage = 1; render(); };
   });
@@ -362,28 +384,31 @@ function render(){
     <div class="archive-summary">
       <div>
         <div class="section-title">收录条目 · ${list.length}</div>
-        <div class="section-sub">新增条目置顶，其余按时间倒序 · 每页 ${PAGE_SIZE} 条</div>
+        <div class="section-sub">近 7 天收录置顶，其余按发表时间倒序 · 每页 ${PAGE_SIZE} 条<br>SIG 评分表示可迁移价值，不代表证据可信度</div>
       </div>
       ${paginationHTML(activePage, totalPages, 'top')}
     </div>
     ${pageList.map(e=>`
-      <div class="card" id="card-${e.id}">
-        <div class="card-head" onclick="toggle('${e.id}')">
-          <div class="card-top">
-            <div>
-              <div class="card-title">${isNew(e)?'<span class="new-badge" aria-label="新增条目">新增</span>':''}${e.title}</div>
-              ${e.title_en ? `<div class="card-title-en">${e.title_en}</div>` : ''}
-              <div class="card-meta"><span>${e.org}</span><span>${e.date}</span><span>${e.cat}</span></div>
-            </div>
-            ${signalBars(e.signal)}
-          </div>
-          <div class="card-abstract">${e.abstract}</div>
+      <article class="card" id="card-${escapeHTML(encodeURIComponent(e.id))}">
+        <div class="card-head">
+          <button class="card-toggle" type="button" aria-expanded="false" aria-controls="body-${escapeHTML(encodeURIComponent(e.id))}" aria-label="${escapeHTML(e.title)}：展开或收起摘评">
+            <span class="card-top">
+              <span>
+                <span class="card-title">${isNew(e)?'<span class="new-badge" aria-label="新增条目">新增</span>':''}${escapeHTML(e.title)}</span>
+                ${e.title_en ? `<span class="card-title-en">${escapeHTML(e.title_en)}</span>` : ''}
+                <span class="card-meta"><span>${escapeHTML(e.org)}</span><span>发表 ${escapeHTML(e.date)}</span>${e.added ? `<span>收录 ${escapeHTML(e.added)}</span>` : ''}<span>${escapeHTML(e.cat)}</span></span>
+              </span>
+              ${signalBars(e.signal)}
+            </span>
+            <span class="card-abstract">${escapeHTML(e.abstract)}</span>
+          </button>
+          ${sourceLink(e.url)}
         </div>
-        <div class="card-body">
+        <div class="card-body" id="body-${escapeHTML(encodeURIComponent(e.id))}" hidden>
           <div class="wave"></div>
           <div class="body-block">
             <h4>为什么收录</h4>
-            <p>${e.why}</p>
+            <p>${escapeHTML(e.why)}</p>
           </div>
           <div class="body-block">
             <h4>核心内容</h4>
@@ -391,20 +416,26 @@ function render(){
           </div>
           <div class="body-block">
             <h4>评价</h4>
-            <p>${e.verdict}</p>
+            <p>${escapeHTML(e.verdict)}</p>
           </div>
-          <div class="tags">${e.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-          <a class="source-link" href="${e.url}" target="_blank" rel="noopener">阅读原文 →</a>
+          <div class="tags">${e.tags.map(t=>`<span class="tag">${escapeHTML(t)}</span>`).join('')}</div>
+          ${sourceLink(e.url)}
         </div>
-      </div>
+      </article>
     `).join('')}
     ${paginationHTML(activePage, totalPages, 'bottom')}
   `;
   bindPagination();
+  wrap.querySelectorAll('.card-toggle').forEach(button=>{
+    button.addEventListener('click', ()=>toggle(button));
+  });
 }
 
-function toggle(id){
-  document.getElementById('card-'+id).classList.toggle('open');
+function toggle(button){
+  const card = button.closest('.card');
+  const expanded = card.classList.toggle('open');
+  button.setAttribute('aria-expanded', String(expanded));
+  document.getElementById(button.getAttribute('aria-controls')).hidden = !expanded;
 }
 
 render();
