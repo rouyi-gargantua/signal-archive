@@ -139,23 +139,12 @@
   .card.open{border-color:var(--signal);}
 
   .body-block{margin-top:18px;}
-  .body-block h4{
-    font-family:var(--mono);font-size:11px;letter-spacing:0.08em;
-    color:var(--signal);text-transform:uppercase;margin-bottom:8px;
-  }
   .body-block p{font-size:14.5px;color:var(--ink);line-height:1.85;}
-  .body-block p + p{margin-top:10px;}
+  .body-block p + p{margin-top:16px;}
+  .body-block strong{font-weight:700;color:var(--ink);background:linear-gradient(transparent 68%,rgba(221,80,31,.15) 68%);}
+  .related-sources{display:flex;flex-wrap:wrap;gap:0 18px;}
+  .body-block .reading-limit{color:var(--ink-soft);font-size:13px;border-left:2px solid var(--line);padding-left:12px;}
 
-  /* structured core */
-  .core-list{list-style:none;}
-  .core-list li{font-size:14.5px;line-height:1.8;margin-top:11px;}
-  .core-list li:first-child{margin-top:2px;}
-  .core-list .k{
-    color:var(--signal);font-family:var(--mono);font-size:10.5px;
-    letter-spacing:0.05em;text-transform:uppercase;
-    display:block;margin-bottom:2px;
-  }
-  .core-list .v{color:var(--ink);}
 
   .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;}
   .tag{
@@ -251,7 +240,7 @@
     </div>
   </div>
   <div class="standard">
-    <b>收录标准</b> — 一句话：收"道"，不收"术"。无论是应用案例、统一理论、还是有趣到能引发思考的东西，判准只有一个——读完是否在原理 / 视角 / 应用层面有可迁移的收获。形式不限（工程博客、论文预印本、X thread、公众号长文）。
+    <b>收录标准</b> — 收“道”，不收“术”。寻找对智能与现实有启发的应用案例和通用理论：既看知识、工具与协作如何产生增量，也看认知机制、伦理和AI社会实验提出了什么好问题。读完应留下一个值得记住、继续思考的判断。
   </div>
 </header>
 
@@ -291,14 +280,28 @@ function escapeHTML(value){
   return String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-function sourceLink(value){
+function sourceLink(value, label="阅读原文"){
   try{
     const url = new URL(String(value));
     if(!['http:', 'https:'].includes(url.protocol)) throw new Error('Unsupported source URL');
-    return `<a class="source-link" href="${escapeHTML(url.href)}" target="_blank" rel="noopener noreferrer">阅读原文 →</a>`;
+    return `<a class="source-link" href="${escapeHTML(url.href)}" target="_blank" rel="noopener noreferrer">${escapeHTML(label)} →</a>`;
   }catch{
     return '<span class="source-unavailable">原文链接暂不可用</span>';
   }
+}
+
+function highlightedText(value, phrases=[]){
+  const text = String(value ?? '');
+  const marks = phrases.map(phrase=>({phrase:String(phrase),start:text.indexOf(String(phrase))}))
+    .filter(m=>m.phrase && m.start>=0).sort((a,b)=>a.start-b.start || b.phrase.length-a.phrase.length);
+  let cursor=0, output='';
+  for(const mark of marks){
+    if(mark.start<cursor) continue;
+    output+=escapeHTML(text.slice(cursor,mark.start));
+    output+=`<strong>${escapeHTML(mark.phrase)}</strong>`;
+    cursor=mark.start+mark.phrase.length;
+  }
+  return output+escapeHTML(text.slice(cursor));
 }
 
 function signalBars(value){
@@ -325,12 +328,6 @@ function isNew(e){
   return days >= 0 && days <= NEW_DAYS;
 }
 
-function coreHTML(core){
-  if(Array.isArray(core)){
-    return `<ul class="core-list">${core.map(c=>`<li><span class="k">${escapeHTML(c.k)}</span><span class="v">${escapeHTML(c.v)}</span></li>`).join('')}</ul>`;
-  }
-  return `<p>${escapeHTML(core)}</p>`;
-}
 
 function pageItems(current, total){
   if(total <= 7) return Array.from({length:total}, (_, i)=>i+1);
@@ -407,17 +404,10 @@ function render(){
         <div class="card-body" id="body-${escapeHTML(encodeURIComponent(e.id))}" hidden>
           <div class="wave"></div>
           <div class="body-block">
-            <h4>为什么收录</h4>
-            <p>${escapeHTML(e.why)}</p>
+            ${e.body.map(p=>`<p>${highlightedText(p, e.highlights || [])}</p>`).join('')}
+            ${e.limits ? `<p class="reading-limit">${escapeHTML(e.limits)}</p>` : ''}
           </div>
-          <div class="body-block">
-            <h4>核心内容</h4>
-            ${coreHTML(e.core)}
-          </div>
-          <div class="body-block">
-            <h4>评价</h4>
-            <p>${escapeHTML(e.verdict)}</p>
-          </div>
+          ${e.related_sources?.length ? `<div class="related-sources">${e.related_sources.map(s=>sourceLink(s.url,s.label)).join('')}</div>` : ''}
           <div class="tags">${e.tags.map(t=>`<span class="tag">${escapeHTML(t)}</span>`).join('')}</div>
           ${sourceLink(e.url)}
         </div>
