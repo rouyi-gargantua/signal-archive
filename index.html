@@ -319,13 +319,9 @@ function dateVal(d){
   return parseInt(m[1])*100 + (m[2] ? parseInt(m[2]) : 12);
 }
 
-const NEW_DAYS = 7;  // added 距今 ≤ 此天数 → 显示「新增」角标，过后自动消失
+const latestBatchIds = new Set(window.LATEST_BATCH?.ids || []);
 function isNew(e){
-  if(!e.added) return false;
-  const t = Date.parse(String(e.added) + 'T00:00:00+08:00');
-  if(isNaN(t)) return false;
-  const days = (Date.now() - t) / 86400000;
-  return days >= 0 && days <= NEW_DAYS;
+  return latestBatchIds.has(e.id);
 }
 
 
@@ -381,7 +377,7 @@ function render(){
     <div class="archive-summary">
       <div>
         <div class="section-title">收录条目 · ${list.length}</div>
-        <div class="section-sub">近 7 天收录置顶，其余按发表时间倒序 · 每页 ${PAGE_SIZE} 条<br>SIG 评分表示可迁移价值，不代表证据可信度</div>
+        <div class="section-sub">最近一批新增置顶，其余按发表时间倒序 · 每页 ${PAGE_SIZE} 条<br>SIG 评分表示可迁移价值，不代表证据可信度</div>
       </div>
       ${paginationHTML(activePage, totalPages, 'top')}
     </div>

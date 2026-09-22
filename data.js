@@ -1406,3 +1406,13 @@ window.ENTRIES = [
 },
 /* INSERT-MARKER：新增条目追加在此行之前 */
 ];
+
+// 最近一次新增批次：仅非空新增批次替换；零新增及编辑批次保留。
+window.LATEST_BATCH = {
+  "id": "2026-09-22-定时收录",
+  "ids": [
+    "genai-cure-intellectual-reach",
+    "sciencebuddy-procedure-model-learning",
+    "beyond-prompts-selection-reliability"
+  ]
+};
