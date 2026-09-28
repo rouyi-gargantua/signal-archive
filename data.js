@@ -1142,7 +1142,7 @@ window.ENTRIES = [
   "org": "Anthropic Science · Laura Luebbert 等",
   "date": "2026-06",
   "added": "2026-08-04",
-  "signal": 5,
+  "signal": 4,
   "tags": [
     "数据检索",
     "来源追溯",
