@@ -1405,33 +1405,6 @@ window.ENTRIES = [
   "url": "https://arxiv.org/abs/2609.05736"
 },
 {
-  "id": "metabase-context-integration-chaos",
-  "cat": "实践",
-  "title": "Metabase 生产复盘：组件都优化了，Agent 为什么反而失效？",
-  "title_en": "Lessons learned from building AI analytics agents: build for chaos",
-  "org": "Thomas Schmidt · Metabase",
-  "date": "2026-02",
-  "added": "2026-09-30",
-  "signal": 4,
-  "tags": [
-    "数据分析",
-    "上下文一致性",
-    "生产评估"
-  ],
-  "abstract": "Metabase 的失败复盘揭示：独立优化的工具与提示，可能在同一上下文中互相冲突；局部变好并不保证整套分析系统变好。",
-  "body": [
-    "团队的一次演示突然失控：负责页面感知的工程师让 Agent 更清楚用户正在看哪个仪表盘，另一位工程师把查询工具调得更好，合在一起却让模型连工具都用不明白。作者追查后发现，模型接收的是同一份上下文，而不是彼此隔离的模块；工具描述与动态状态采用不同约定，局部优化最终变成了互相矛盾的指令。",
-    "修复从统一表达开始：表、字段和图表使用一致的数据表示；图表创建后，再在工具结果中说明如何让用户看到它；查询失败时，返回可继续查找的线索。这些做法背后的重点是，把下一步需要的信息放在它实际生效的位置，而不是不断加长开头的提示。",
-    "更尖锐的反例出现在评测：分数进入九十分段，用户感受到的质量却下降。工程师测试的是“按周统计订单”，用户问的却是“收入为什么下降”，后者还缺时间、收入定义与比较基线。团队因此把这套测试主要当作回归检查。测试通过说明已覆盖的路径没坏，不能替代对真实问题如何被澄清、理解和回答的观察。"
-  ],
-  "highlights": [
-    "局部优化最终变成了互相矛盾的指令",
-    "分数进入九十分段，用户感受到的质量却下降"
-  ],
-  "limits": "这是团队自述的工程复盘，未公开完整评测集和受控对照；经验支持检查系统整体行为，不能据此认定某种提示写法普遍更优。",
-  "url": "https://www.metabase.com/blog/lessons-learned-building-ai-analytics-agents"
-},
-{
   "id": "grounding-memory-before-writing",
   "cat": "实践",
   "title": "让记忆落地：从任务中总结的经验，应该先回到环境里核验",
@@ -1498,7 +1471,6 @@ window.ENTRIES = [
 window.LATEST_BATCH = {
   "id": "2026-09-30-收录-035318",
   "ids": [
-    "metabase-context-integration-chaos",
     "grounding-memory-before-writing",
     "work-frontier-recurring-task-crossover"
   ]
