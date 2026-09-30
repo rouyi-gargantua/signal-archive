@@ -1404,15 +1404,102 @@ window.ENTRIES = [
   "limits": "仅覆盖三个离线工具调用基准；电信任务部分方案的评分执行路径不同，成本统计也不是完整部署成本，不能据此作普遍收益排名。",
   "url": "https://arxiv.org/abs/2609.05736"
 },
+{
+  "id": "metabase-context-integration-chaos",
+  "cat": "实践",
+  "title": "Metabase 生产复盘：组件都优化了，Agent 为什么反而失效？",
+  "title_en": "Lessons learned from building AI analytics agents: build for chaos",
+  "org": "Thomas Schmidt · Metabase",
+  "date": "2026-02",
+  "added": "2026-09-30",
+  "signal": 4,
+  "tags": [
+    "数据分析",
+    "上下文一致性",
+    "生产评估"
+  ],
+  "abstract": "Metabase 的失败复盘揭示：独立优化的工具与提示，可能在同一上下文中互相冲突；局部变好并不保证整套分析系统变好。",
+  "body": [
+    "团队的一次演示突然失控：负责页面感知的工程师让 Agent 更清楚用户正在看哪个仪表盘，另一位工程师把查询工具调得更好，合在一起却让模型连工具都用不明白。作者追查后发现，模型接收的是同一份上下文，而不是彼此隔离的模块；工具描述与动态状态采用不同约定，局部优化最终变成了互相矛盾的指令。",
+    "修复从统一表达开始：表、字段和图表使用一致的数据表示；图表创建后，再在工具结果中说明如何让用户看到它；查询失败时，返回可继续查找的线索。这些做法背后的重点是，把下一步需要的信息放在它实际生效的位置，而不是不断加长开头的提示。",
+    "更尖锐的反例出现在评测：分数进入九十分段，用户感受到的质量却下降。工程师测试的是“按周统计订单”，用户问的却是“收入为什么下降”，后者还缺时间、收入定义与比较基线。团队因此把这套测试主要当作回归检查。测试通过说明已覆盖的路径没坏，不能替代对真实问题如何被澄清、理解和回答的观察。"
+  ],
+  "highlights": [
+    "局部优化最终变成了互相矛盾的指令",
+    "分数进入九十分段，用户感受到的质量却下降"
+  ],
+  "limits": "这是团队自述的工程复盘，未公开完整评测集和受控对照；经验支持检查系统整体行为，不能据此认定某种提示写法普遍更优。",
+  "url": "https://www.metabase.com/blog/lessons-learned-building-ai-analytics-agents"
+},
+{
+  "id": "grounding-memory-before-writing",
+  "cat": "实践",
+  "title": "让记忆落地：从任务中总结的经验，应该先回到环境里核验",
+  "title_en": "Grounding Agent Memory: Environment-Probing Curation for Enterprise Agents",
+  "org": "Susheel Suresh、Hazel Mak、Sahil Bhatnagar、Chhaya Methani、Alejandro Gutierrez Munoz · Microsoft",
+  "date": "2026-09",
+  "added": "2026-09-30",
+  "signal": 4,
+  "tags": [
+    "经验复用",
+    "知识核验",
+    "数据分析"
+  ],
+  "abstract": "旧轨迹只记录 Agent 曾经看到的局部世界；让记忆整理者在写入前只读探查环境，才能补查连接关系、适用条件和已经变化的事实。",
+  "body": [
+    "一段失败记录可以告诉后来者“这个均值算错了”，却没有告诉它应该连接哪张表、使用哪个价格字段。论文展示的记忆样本正有这种差别：仅总结轨迹时，留下的是错误答案和笼统警告；允许整理者查询环境后，留下的则是连接键、过滤条件和聚合粒度。记住教训与掌握可复用的解法，是两件事。",
+    "作者将执行与记忆维护分开：当前任务结束后，整理者拿到轨迹和最终反馈，必要时只读检查数据库或文档，再决定写入、缩小适用范围或跳过。下一个任务尚未揭示，执行 Agent 的模型、工具和记忆读取接口保持不变。被扩大的不是当前任务的操作权限，而是经验写入前的证据范围。",
+    "在包含四十个问题、中途更改表结构的数据库测试中，五次配对运行的平均通过率分别为：无记忆39%、轨迹记忆70%、增加环境核验73%。大部分提升来自记忆本身，不能全算成核验的贡献；后者还将每题查询从5.6次降至4.7次。它提出的长期维护判断是：经验不应因为曾经有用就永久有效，复用之前还要知道它依据什么、适用于哪里。"
+  ],
+  "highlights": [
+    "记住教训与掌握可复用的解法，是两件事",
+    "经验写入前的证据范围"
+  ],
+  "limits": "实验限于数据库与改编的咨询任务；部分不确定区间重叠，报告的执行成本不含额外的记忆整理成本，不能解读为端到端成本已经同比下降。",
+  "url": "https://arxiv.org/abs/2609.11060"
+},
+{
+  "id": "work-frontier-recurring-task-crossover",
+  "cat": "实践",
+  "title": "工作前沿：岗位名称没变，反复承担的任务却可能变了",
+  "title_en": "How workers are unlocking new ways of working",
+  "org": "OpenAI Economic Research · Alex Martin Richmond、Caroline Chin",
+  "date": "2026-09",
+  "added": "2026-09-30",
+  "signal": 4,
+  "tags": [
+    "工作变化",
+    "岗位边界",
+    "专业判断"
+  ],
+  "abstract": "跨岗位使用 AI 不只是一次性试验：部分员工会反复回到这些任务，提示工作的变化可能先发生在职责组合里，而不是岗位名称上。",
+  "body": [
+    "研究分析美国注册用户在2026年四月至七月发送的逾150万条工作相关 ChatGPT 消息，职业信息来自关联的 Business 入门资料。跨岗位请求往往更少要求讲解做法，却更常带上背景、例子并要求核查。作者将其解释为“借用专长”：用户可能想让另一领域的知识帮助当前工作，而不一定想先学会整门专业。",
+    "在匹配后的逐月观察中，上月做过某类跨岗位任务的员工，次月再次使用该任务的比例为23.6%；没有此前使用记录的可比员工为8.4%。这支持某些跨界活动具有持续需求，但不能证明 AI 造成了职责变化，也没有测量这些任务最终完成得好不好。",
+    "重复使用并不均匀。按首次观察到使用后的次月回访计算，客户沟通为54%，解释财务信息约15%；这是另一种统计口径，不能与前述23.6%混作同一个平均值。值得继续追问的是：哪些跨界工作会成为稳定职责，哪些仍需要专业人员介入？AI 对分工的影响，可能表现为同一岗位内部任务组合的改变。"
+  ],
+  "highlights": [
+    "借用专长",
+    "同一岗位内部任务组合的改变"
+  ],
+  "limits": "样本是特定平台上持续活跃用户的部分消息，不能代表全部工作活动；观察到重复使用，不等于技能增长、任务质量或正式岗位调整。",
+  "related_sources": [
+    {
+      "label": "研究报告：样本、复用率口径与方法",
+      "url": "https://cdn.openai.com/pdf/work-at-the-frontier-report-202609.pdf"
+    }
+  ],
+  "url": "https://openai.com/index/unlocking-new-ways-of-working/"
+},
 /* INSERT-MARKER：新增条目追加在此行之前 */
 ];
 
 // 最近一次新增批次：仅非空新增批次替换；零新增及编辑批次保留。
 window.LATEST_BATCH = {
-  "id": "2026-09-22-定时收录",
+  "id": "2026-09-30-收录-035318",
   "ids": [
-    "genai-cure-intellectual-reach",
-    "sciencebuddy-procedure-model-learning",
-    "beyond-prompts-selection-reliability"
+    "metabase-context-integration-chaos",
+    "grounding-memory-before-writing",
+    "work-frontier-recurring-task-crossover"
   ]
 };
