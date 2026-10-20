@@ -1691,14 +1691,48 @@ window.ENTRIES = [
   "url": "https://alignment.anthropic.com/2026/teaching-claude-why/"
 },
 
+{
+  "id": "shared-memory-access-before-messages",
+  "cat": "理论",
+  "title": "共享记忆空间：向另一个 Agent 提问，还是直接查它公开的记录？",
+  "title_en": "Memory as a Shared Space: Retrieval Interfaces and View-Filtered Indexes for Persistent Agents",
+  "org": "Yanming Guo、Haixin Wang、Yanjun Lu（AIDC；悉尼大学）",
+  "date": "2026-10",
+  "added": "2026-10-20",
+  "signal": 4,
+  "tags": [
+    "共享记忆",
+    "访问权限",
+    "协作成本"
+  ],
+  "abstract": "跨 Agent 获取知识不一定需要另一轮对话；这项研究将共享记录与检索权限结合，区分了沟通成本、信息暴露和答案泄露。",
+  "body": [
+    "另一个 Agent 知道答案，是否就该发消息请它回答？作者把同一段聊天历史拆给六个 Agent：一个提问，三个公开记忆，两个保持私有。在120道证据由公开伙伴持有的问题上，直接检索共享索引的准确率为91.7%，向伙伴提问为90.0%；前者平均使用约五分之一的 token。这里省去的是伙伴重新检索、组织答案和回复的过程，并非证明多 Agent 协作普遍无用。",
+    "共享的前提是每个 Agent 只能检索自己有权看到的记录。实验把权限条件放进索引，162次运行取回的8,019个片段中没有私有 Agent 的记录。反过来，只在提示中要求保密，虽然模型经常拒答，42道私有证据题仍有1,523个私有片段进入上下文。不说出来，不等于没有读到。",
+    "这也不是完整的隐私保证：共享视图仍有3道答案被判含有私有答案，作者复查发现公开记录中的重复信息和模型已有知识也能导向答案。阻断记录访问与阻断事实泄露是两种要求；前者可以按标签检查，后者还涉及信息被复述和推断后的流动。",
+    "研究另在180道单 Agent 题上固定模型与记忆内容，发现紧凑检索工具约减半 token，主要差别来自返回内容和工具说明，而不是加入向量。准确率差的区间仍允许下降5.6个百分点，不能称为无损降本。它值得借鉴的，是把记忆是否可见、如何读取、是否需要再次生成，作为三个不同问题来比较。"
+  ],
+  "highlights": [
+    "不说出来，不等于没有读到",
+    "阻断记录访问与阻断事实泄露是两种要求"
+  ],
+  "limits": "结果来自单一读取模型与英文聊天基准；多 Agent 数据是人工拆分的历史，不代表真实组织长期协作，权限检查也不覆盖公开记录转述私密信息。",
+  "url": "https://www.ai-dc.ai/research/shared-memory-space/paper",
+  "related_sources": [
+    {
+      "label": "作者研究摘要",
+      "url": "https://www.ai-dc.ai/research/shared-memory-space"
+    }
+  ]
+},
+
 /* INSERT-MARKER：新增条目追加在此行之前 */
 ];
 
 // 最近一次新增批次：仅非空新增批次替换；零新增及编辑批次保留。
 window.LATEST_BATCH = {
-  "id": "2026-10-16-定时收录-010235",
+  "id": "2026-10-20-定时收录-024746",
   "ids": [
-    "filesystem-memory-organization-payoff",
-    "teaching-claude-why-generalization"
+    "shared-memory-access-before-messages"
   ]
 };
