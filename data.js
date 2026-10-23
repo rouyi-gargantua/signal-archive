@@ -1726,13 +1726,78 @@ window.ENTRIES = [
   ]
 },
 
+{
+  "id": "post-task-workflows-review-before-reuse",
+  "cat": "实践",
+  "title": "Trace2Flow：任务做完后的流程图，先帮人查错，再谈复用",
+  "title_en": "From Review to Reuse: How Post-Task Workflow Can Support Human-AI Agent Interaction",
+  "org": "Zekun Wu、Xinru Wang、Rock Yuren Pang、Chenglong Wang、Anna Maria Feit",
+  "date": "2026-09",
+  "added": "2026-10-23",
+  "signal": 4,
+  "tags": [
+    "人机协作",
+    "过程审查",
+    "工作流复用"
+  ],
+  "abstract": "把已执行过程整理成可检查的流程图，能帮助人发现步骤间的错误；但看懂过程与高效复用，是需要分别验证的两种收益。",
+  "body": [
+    "Trace2Flow先让Agent按自然语言完成任务，再把实际工具调用与数据依赖整理成可编辑流程图。图的起点是已发生的执行，而不是预先规定的路线；用户既可查看节点的输入输出，也可修改局部并重新运行。",
+    "20名经常使用Agent的参与者审查了含有提示错误或执行错误的任务。46次任务会话中，提供流程图时有15/23次正确判断任务是否完成，仅聊天界面时为7/23。后者同样展示提示、执行进度和最终结果，区别在于信息有没有被组织成可以对照的过程。",
+    "一个难例是Agent读过已有评论，却没用它们筛掉重复项，最后把所有评论写入表格。结果看起来完整，流程图却暴露了读取与过滤之间缺少依赖。不过，使用流程图的6次会话也只有2次发现问题；另一个简历中的虚构地名，更不能靠连线验证。结构能暴露漏步，不能替代内容核实。",
+    "后续相近任务中，改流程图与改旧提示在成功率、耗时和难度上均未发现显著差异，这也不证明两者等效。流程图较受熟悉工作流、只需局部修改的人欢迎。文章更有力的发现是审查价值：把执行留下来供人交叉核对，比直接宣称沉淀成流程就能提效更有依据。"
+  ],
+  "highlights": [
+    "结构能暴露漏步，不能替代内容核实",
+    "审查价值"
+  ],
+  "limits": "预印本；样本仅20人，使用预先选定的错误轨迹和小规模任务。流程转换也只在研究任务集内验证，不能外推为任意Agent轨迹都能可靠复用。",
+  "url": "https://arxiv.org/abs/2609.13136",
+  "related_sources": [
+    {
+      "label": "微软研究条目",
+      "url": "https://www.microsoft.com/en-us/research/publication/from-review-to-reuse-how-post-task-workflow-can-support-human-ai-agent-interaction/"
+    }
+  ]
+},
+
+{
+  "id": "agent-ready-data-meaning-calculation-authority",
+  "cat": "理论",
+  "title": "让数据适合 Agent：业务含义、指标计算与行动权限要分开定义",
+  "title_en": "Making Your Data Ready for Agentic AI",
+  "org": "Pramod Sadalage、Prem Chandrasekaran · Thoughtworks",
+  "date": "2026-08",
+  "added": "2026-10-23",
+  "signal": 4,
+  "tags": [
+    "数据架构",
+    "业务语义",
+    "行动权限"
+  ],
+  "abstract": "当Agent从查数走向行动，知道业务对象是什么、指标怎么算、操作是否获准，必须成为三种可维护的定义，不能混成一份背景说明。",
+  "body": [
+    "两位Thoughtworks作者把上下文拆成三个部分：领域模型说明客户、订单等对象及关系；语义模型把指标定义编译成受约束的查询；能力模型声明可执行操作、权限、责任人和前置条件。它们共用业务词汇，却承担不同保证：认识一个客户，不代表算对其收入，更不代表有权退款。",
+    "退款例子把这种差别说得具体。工具说明帮助Agent选择操作，但真正执行前，系统还需检查原付款存在、尚未退款、金额没有超出调用者权限。这些条件应在行动时对照实时状态，而不能沿用规划时读到的旧结果。能找到规则，与规则能拦住一次操作，是两回事。",
+    "文章进一步区分文档的两种角色。政策原文可以帮助理解问题、形成建议；决定能否行动的条件，则由人审核后预先声明，并保留来源关联。原文更新可以触发复核队列，却不能仅凭文本差异自动判断派生条件是否失效。来源关联提供的是维护线索，并非自动正确性。",
+    "这一视角补充了常见的语义层讨论：Agent不仅需要统一的指标口径，还需要把解释、计算和授权各自落到负责维护的位置。作者也建议按操作的可撤销性判断自主程度，而不只看金额。这里提出的是架构取舍与示例，并未证明采用整套设计后必然提升准确率或消除安全风险。"
+  ],
+  "highlights": [
+    "能找到规则，与规则能拦住一次操作，是两回事",
+    "维护线索，并非自动正确性"
+  ],
+  "limits": "作者架构论述，不是受控部署实验；正文中对模型能力、工具数量和治理的概括不宜当成普遍定律。本文聚焦其定义与维护边界，不引用未独立核验的厂商收益数字。",
+  "url": "https://martinfowler.com/articles/making-data-ready-for-agentic-ai.html"
+},
+
 /* INSERT-MARKER：新增条目追加在此行之前 */
 ];
 
 // 最近一次新增批次：仅非空新增批次替换；零新增及编辑批次保留。
 window.LATEST_BATCH = {
-  "id": "2026-10-20-定时收录-024746",
+  "id": "2026-10-23-定时收录-090258",
   "ids": [
-    "shared-memory-access-before-messages"
+    "post-task-workflows-review-before-reuse",
+    "agent-ready-data-meaning-calculation-authority"
   ]
 };
