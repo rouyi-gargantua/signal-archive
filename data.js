@@ -1790,14 +1790,78 @@ window.ENTRIES = [
   "url": "https://martinfowler.com/articles/making-data-ready-for-agentic-ai.html"
 },
 
+{
+  "id": "agent-output-human-attention-bottleneck",
+  "cat": "实践",
+  "title": "Anthropic 工作变化：Agent 做得更多，人的协调工作为何没有减少？",
+  "title_en": "How employment is changing at Anthropic",
+  "org": "Nathan Wilmers、Regina Catipon、Maxim Massenkoff、Peter McCrory · Anthropic",
+  "date": "2026-10",
+  "added": "2026-10-27",
+  "signal": 4,
+  "tags": [
+    "工作变化",
+    "注意力",
+    "组织协调"
+  ],
+  "abstract": "Agent产出增加后，人的工作转向组织和审查这些产出；Anthropic的内部观察显示，自动化扩张与更多人际协调可以同时发生。",
+  "body": [
+    "研究结合内部用工、工具使用、产出、日历和招聘记录，以及17次员工访谈。最有辨识度的变化是管理Agent本身成为工作：写技能、安排其他Agent的任务、搭监控和整理操作方法的会话，占比从2025年秋季约10%升至2026年春季22%。该分类由模型对2,000条会话摘要判断，衡量会话比例，并不是工时比例。",
+    "这些管理工作并未消除人与人的协调。技术类个人贡献者的会议时间在一年里增加16%；一个部门的公开聊天网络中，Agent主要进入专门的人机频道，原有人际互动结构变化不大。工具可以处理实现任务，涉及组织取舍与责任的决定仍需人一起作出。",
+    "文章还揭示了让工作对Agent可见的压力：一名员工的名字留在数月前的周边物品文档上，Agent便继续把已不归其负责的请求送来。没有留下记录的会议决定又无法进入Agent上下文。记录工作不仅方便交接，也开始影响机器把注意力和请求分配给谁。",
+    "作者同时观察到初级技术岗位在招聘中的占比下降，并讨论内部转岗与收益分享。这里有一个重要的不对称：帮助在职员工转岗，不能帮助那些尚未被雇用的人。自动化带来的组织变化，需要分别看现有员工的职责如何重组，以及新人还剩哪些进入机会。"
+  ],
+  "highlights": [
+    "管理Agent本身成为工作",
+    "帮助在职员工转岗，不能帮助那些尚未被雇用的人"
+  ],
+  "limits": "单一AI厂商内部观察，工具采用非随机且公司同期快速增长；会话、代码和运行时长都不等于净生产率，不能据此推断全社会就业的因果变化。",
+  "url": "https://www.anthropic.com/research/employment-at-anthropic"
+},
+
+{
+  "id": "audit-assistance-judgment-displacement",
+  "cat": "实践",
+  "title": "谁在作出审计判断：AI 帮人发现问题，也可能替人定义问题",
+  "title_en": "Who Does What in AI Auditing? Designing Human–AI Collaboration for Auditing Generative AI",
+  "org": "Eunkyu Park、Markelle Roesti、Wesley Hanwen Deng 等",
+  "date": "2026-09",
+  "added": "2026-10-27",
+  "signal": 4,
+  "tags": [
+    "人机协作",
+    "智能体评估",
+    "判断责任"
+  ],
+  "abstract": "AI辅助审计可以拓宽个人的探索范围，却也让检测结论与报告更容易被直接接受；保留最终确认权，不代表人仍独立形成了判断。",
+  "body": [
+    "HAAC让Agent提出测试情境、检测购物助手的潜在问题并起草报告，人负责选择、判断和提交。71名大学生分别体验有辅助与无辅助的12分钟审计，先后顺序交错安排。每人平均尝试的攻击策略从2.5类增至3.3类，但两组整体都已覆盖全部策略和故障类别；增量主要是让更多人探索更多方向，而不是发现全新的类别。",
+    "辅助发生在哪一步，带来的影响不同。情境建议能帮助没思路的人开始探索，也有参与者表示自己的后续问题逐渐模仿建议的风格。到了检测与写报告阶段，接受现成判断更加明显：在检测器标出问题的275轮中，人的故障分类有264轮与它相同；160份可用生成草稿的报告中，150份未经修改就提交。",
+    "作者报告每位参与者的平均攻击成功率从4.0%升至14.2%，但成功由审计者最终判断，缺少独立专家盲审。因此，这个增长可能同时包含测试更有效和判定方式改变，不能当作发现真实缺陷的准确率提升。同样，高一致率也不能单独证明人已丧失独立思考。",
+    "论文值得保留的区分是给人材料去判断，与把判断做好后请人确认。后续四名从业者不仅关心查出多少问题，也追问攻击如何复现、检测器是否可靠、生成策略是否过时。审计Agent参与形成证据以后，它自身也成为需要检查的对象；人的确认按钮并不足以保证判断过程仍由人承担。"
+  ],
+  "highlights": [
+    "给人材料去判断，与把判断做好后请人确认",
+    "它自身也成为需要检查的对象"
+  ],
+  "limits": "预印本；短时课堂研究、单一购物助手，未隔离各辅助组件的贡献。多轮攻击支持是在首项研究后才加入，尚未由这71人评估。",
+  "url": "https://arxiv.org/abs/2609.24986",
+  "related_sources": [
+    {
+      "label": "微软研究条目",
+      "url": "https://www.microsoft.com/en-us/research/publication/who-does-what-in-ai-auditing-designing-human-ai-collaboration-for-auditing-generative-ai/"
+    }
+  ]
+},
+
 /* INSERT-MARKER：新增条目追加在此行之前 */
 ];
 
 // 最近一次新增批次：仅非空新增批次替换；零新增及编辑批次保留。
 window.LATEST_BATCH = {
-  "id": "2026-10-23-定时收录-090258",
+  "id": "2026-10-27-定时收录-090154",
   "ids": [
-    "post-task-workflows-review-before-reuse",
-    "agent-ready-data-meaning-calculation-authority"
+    "agent-output-human-attention-bottleneck",
+    "audit-assistance-judgment-displacement"
   ]
 };
