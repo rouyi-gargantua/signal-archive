@@ -1848,14 +1848,42 @@ window.ENTRIES = [
   "url": "https://arxiv.org/abs/2610.29162"
 },
 
+{
+  "id": "fold-subagents-context-ownership",
+  "cat": "实践",
+  "title": "何时把子 Agent 合回主循环：团队分工，不必变成推理分工",
+  "title_en": "Building agents: When to fold subagents into your main agent loop",
+  "org": "Diane Sarkis · Anthropic",
+  "date": "2026-10",
+  "added": "2026-10-28",
+  "signal": 4,
+  "tags": [
+    "智能体架构",
+    "上下文",
+    "团队协作"
+  ],
+  "abstract": "团队可以分别维护技能与工具，让同一个Agent保持连续判断；是否保留子Agent，应看隔离带来的实际收益，而非照搬组织分工。",
+  "body": [
+    "企业常让各团队各做一个Agent，再由中央调度器串起来。Diane Sarkis指出，这会把组织边界复制进推理过程：每次交接只能带回摘要，团队各自优化局部评测，却可能没人负责完整任务。文章提出，把专业知识的维护权与独立推理循环分开：团队仍拥有自己的技能、工具和评测，主Agent按需加载这些能力，保留跨步骤的完整背景。",
+    "合并并不意味着把所有规则塞进一段大提示。技能承载工作步骤与判断方法，工具读取实时数据、执行动作并检查权限；主循环先看到简短描述，需要时才加载细节。规划与执行由同一模型连续承担，也更容易依据新结果改变计划。即使把子Agent包装成工具，返回摘要的信息损失和嵌套循环的延迟仍然存在。",
+    "一个客服样例暴露了合并的反面：延迟降低后，主Agent拿着订单查询工具直接回答，没有再向物流专家核实送达日期，原本通过的流程因此失败。这个问题在两次运行中只出现一次。迁移时要看哪些具体任务由对变错，而不只比较总分；原先靠Agent交接隐含保证的依赖，也需要被明确保留下来。",
+    "作者建议先合并经常连续调用、共享数据的专家，逐个比较合并前后的任务完成情况。上下文膨胀已造成可测退化、任务确实适合独立并行，或工具选择与指令冲突难以解决时，子Agent仍有价值。文章给出的组织启发是：团队分工可以保留，推理边界则应由任务需要决定。"
+  ],
+  "highlights": [
+    "把专业知识的维护权与独立推理循环分开",
+    "原先靠Agent交接隐含保证的依赖"
+  ],
+  "limits": "厂商实践总结，企业比较未公开完整样本、预算与评测细节；客服反例来自样例Agent。不能据此推断单Agent在所有任务或模型上都更优。",
+  "url": "https://claude.com/resources/articles/building-agents-when-to-fold-subagents-into-your-main-agent-loop"
+},
+
 /* INSERT-MARKER：新增条目追加在此行之前 */
 ];
 
 // 最近一次新增批次：仅非空新增批次替换；零新增及编辑批次保留。
 window.LATEST_BATCH = {
-  "id": "2026-10-27-定时收录-090154",
+  "id": "2026-10-28-用户指定子智能体合并",
   "ids": [
-    "agent-output-human-attention-bottleneck",
-    "language-compression-human-comprehension"
+    "fold-subagents-context-ownership"
   ]
 };
