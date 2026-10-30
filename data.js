@@ -1877,13 +1877,48 @@ window.ENTRIES = [
   "url": "https://claude.com/resources/articles/building-agents-when-to-fold-subagents-into-your-main-agent-loop"
 },
 
+{
+  "id": "expert-judgment-agent-random-priors",
+  "cat": "实践",
+  "title": "专家签字之后：分析中的关键选择，究竟是谁作的？",
+  "title_en": "How AI agents shape experts’ judgment calls",
+  "org": "Amaç Herdağdelen、Hailey Joren、Alex Tamkin · Anthropic",
+  "date": "2026-10",
+  "added": "2026-10-30",
+  "signal": 4,
+  "tags": [
+    "专业判断",
+    "人机协作",
+    "分析选择"
+  ],
+  "abstract": "当几种分析选择都说得通时，Agent的偏好仍能左右专家决定；结果没有明显错误、最后由人签字，都不保证判断来自人。",
+  "body": [
+    "研究让50名有因果推断经验的分析师使用Claude Code，评估一个虚构农业合作社的咨询项目。生产率按每公顷产量还是每单位成本衡量、估计覆盖已参加农场还是全体成员，都有合理理由，却会改变项目是否值得推广。研究者为Agent随机指定偏好，要求它诚实论证、不隐瞒数据，分析师并不知道这项安排。",
+    "在四类分析选择中，参与者约86%的选择与Agent偏好一致；随机分组下，无影响的参照是50%。这不是86%的答案做错了，而是原本没有唯一正确答案的决定，随机器被赋予的立场改变。最终推广建议受到的直接影响较小，按预先规定的主要估计方法未达统计显著，不能把两类决定混成同一结论。",
+    "论文记录了一条具体路径：分析师最初采用双重差分，估计收益为4.6%；接受Agent提出的另一种调整方法后，估计变为负值，最终建议停止项目。此时他反而违背了Agent希望推广的最终立场，却已接受它在上游改变的分析路径。守住最后一道决定，不等于保住了形成决定的前提。",
+    "事后问卷中，48人里77%至少一次复述Agent给出的理由，只有15%在任一回答中提到理由来自Agent。作者因此追问：人类审核能否仍被当作独立判断？普通查错只能发现算错或证据不支持，未必能发现合理选项之间的判断权已经转移。让模型充分呈现另一选项的理由、先询问专家立场，是作者提出的后续研究方向，本实验尚未验证其效果。"
+  ],
+  "highlights": [
+    "这不是86%的答案做错了",
+    "守住最后一道决定，不等于保住了形成决定的前提"
+  ],
+  "limits": "单模型、单次约一小时的合成数据任务，参与者熟悉因果推断但不熟悉农业；实验刻意强化Agent偏好，比例不能直接外推。另有11人自行不用AI，不能据两组差异作提效因果结论。",
+  "url": "https://www.anthropic.com/research/agents-judgment-calls",
+  "related_sources": [
+    {
+      "label": "研究论文：Who’s Aligned to Whom?",
+      "url": "https://www-cdn.anthropic.com/519c17a5d23a794e8b6d50a854048d0b61e0d73a.pdf"
+    }
+  ]
+},
+
 /* INSERT-MARKER：新增条目追加在此行之前 */
 ];
 
 // 最近一次新增批次：仅非空新增批次替换；零新增及编辑批次保留。
 window.LATEST_BATCH = {
-  "id": "2026-10-28-用户指定子智能体合并",
+  "id": "2026-10-30-定时收录-010154",
   "ids": [
-    "fold-subagents-context-ownership"
+    "expert-judgment-agent-random-priors"
   ]
 };
