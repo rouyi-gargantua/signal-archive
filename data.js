@@ -1941,34 +1941,7 @@ window.ENTRIES = [
   "url": "https://tech.meituan.com/2026/08/07/Agent-Evaluation.html"
 },
 
-{
-  "id": "tool-results-truth-context-binding",
-  "cat": "理论",
-  "title": "TRAP：工具结果是真的，为什么仍会做错事？",
-  "title_en": "TRAP: Tool-result Replay Attack for Probing Misbinding in LLM Agents",
-  "org": "Yutong Zhi、Jie Zhang 等",
-  "date": "2026-10",
-  "added": "2026-11-06",
-  "signal": 4,
-  "tags": [
-    "工具结果",
-    "上下文绑定",
-    "智能体安全"
-  ],
-  "abstract": "TRAP 揭示一种不靠伪造内容的失败：真实工具结果一旦脱离原任务和状态，也可能成为错误行动的依据。",
-  "body": [
-    "论文区分了结果真实与当前有效。订单1837的状态查询没有被篡改，但若它进入取消订单2941的任务，智能体可能顺着这份真实结果取消错单。问题发生在结果与任务的对应关系上，过滤恶意指令并不能自动解决。",
-    "作者在受控沙箱中测试跨任务重放：8个模型、3种框架、7类场景构成168种配置，每种通常进行10次有效试验，配置平均最终状态错误率为64.9%。评估分别追踪结果送达、错误动作生成、动作获准和持久状态变化，避免把“模型看到了旧结果”直接算成执行失败；服务阻断、空回复和基础设施故障不计入有效试验分母。",
-    "更有辨识度的对照是同一对象也可能失效：授权已撤回、操作已完成或结果到达顺序改变时，仅核对对象ID仍会漏掉问题。研究还发现，部分模型在配对测试中拒绝显式提示注入，却接受未修改的重放结果。",
-    "在所测防御场景中，绑定调用标识、使用一次性授权或检查状态版本都阻断了错误状态写入。它们提醒读者：可信证据不仅要回答“这是真的吗”，还要回答“它现在支持这次行动吗”。恢复成功是在关闭重放、重新提供合法状态后测得，不能据此承诺任意生产故障都可自动恢复。"
-  ],
-  "highlights": [
-    "结果真实与当前有效",
-    "同一对象也可能失效"
-  ],
-  "limits": "受控重放预先制造关联错误，错误率不代表线上发生率；防御主要在GPT-5.5与LlamaIndex的少量场景中验证。",
-  "url": "https://arxiv.org/abs/2610.16333"
-},
+
 
 {
   "id": "harness-scanner-shared-semantic-errors",
@@ -2006,7 +1979,6 @@ window.ENTRIES = [
 window.LATEST_BATCH = {
   "id": "2026-11-06-定时收录-085939",
   "ids": [
-    "tool-results-truth-context-binding",
     "harness-scanner-shared-semantic-errors"
   ]
 };
