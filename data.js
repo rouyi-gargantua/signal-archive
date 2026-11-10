@@ -1972,13 +1972,42 @@ window.ENTRIES = [
   "url": "https://arxiv.org/abs/2609.07360"
 },
 
+{
+  "id": "ai-human-loop-understanding-gaps",
+  "cat": "理论",
+  "title": "AI-in-the-human-loop：人来审核 AI，谁来发现人的理解缺口？",
+  "title_en": "AI-in-the-human-loop: an operational model for mature human-AI collaboration",
+  "org": "Roberto Casadei、Giovanni Delnevo、Barry Bassi、Chiara Ceccarini、Silvia Mirri",
+  "date": "2026-10",
+  "added": "2026-11-10",
+  "signal": 4,
+  "tags": [
+    "人机协作",
+    "理解缺口",
+    "数据分析"
+  ],
+  "abstract": "让人审核AI，并不保证人知道该检查什么；这篇论文提出，协作还应帮助双方识别彼此对任务、数据与方法的理解缺口。",
+  "body": [
+    "通常的“人在环路”让人纠正AI。这篇论文把评估方向反过来：AI也应适时追问人的判断依据，帮助人发现尚未意识到的问题。作者称之为AI-in-the-human-loop，并借用“把人作为测试对象”的比喻。目的不是给人打分或让模型取得裁决权，而是把完成任务与理解任务同时纳入协作。",
+    "案例来自一名缺乏统计专长的程序员与ChatGPT 5.4合作分析学生问卷的11段对话，共30轮人类发言和30轮模型回复。目标、数据与交付物总体清楚，仍出现了重复键JSON导致的计数错误，以及双方对开放题分类粒度理解不同等问题。这说明，提示写得清楚，也未必让双方对文件含义和分析方法达成一致。",
+    "两种模型事后评阅这些对话，研究者再核对原始材料。它们都发现后期协作更有条理，却对成熟程度给出了不同评价；研究者还补出了统计处理方面的问题。因此，文章更有价值的方向是找出具体的澄清时机，例如先确认分析哪些列、开放题分多细、分组比较需要哪些前提，而不是把一个模型给出的成熟度分数当作人的能力结论。",
+    "作者提出让AI持续观察、反馈并支持人的理解，但完整系统尚未实现，个案也没有实时干预或对照实验。这留下一个值得追问的问题：当AI开始评估人是否理解，如何同时核验AI自己的判断，并让这种帮助保留人的自主性？"
+  ],
+  "highlights": [
+    "把完成任务与理解任务同时纳入协作",
+    "找出具体的澄清时机"
+  ],
+  "limits": "单人、单任务的事后质性分析，只支持问题识别与框架探索，不能证明主动评估用户能提升成效。",
+  "url": "https://link.springer.com/article/10.1007/s12652-026-05135-x"
+},
+
 /* INSERT-MARKER：新增条目追加在此行之前 */
 ];
 
 // 最近一次新增批次：仅非空新增批次替换；零新增及编辑批次保留。
 window.LATEST_BATCH = {
-  "id": "2026-11-06-定时收录-085939",
+  "id": "2026-11-10-定时收录-085853",
   "ids": [
-    "harness-scanner-shared-semantic-errors"
+    "ai-human-loop-understanding-gaps"
   ]
 };
