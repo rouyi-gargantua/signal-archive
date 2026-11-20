@@ -2058,13 +2058,41 @@ window.ENTRIES = [
   "url": "https://arxiv.org/abs/2611.17114"
 },
 
+{
+  "id": "performance-factory-diagnosis-survives-recovery",
+  "cat": "实践",
+  "title": "OpenAI Performance Factory：找到异常之后，为什么还不能结案？",
+  "title_en": "How OpenAI’s Performance Factory keeps ChatGPT fast",
+  "org": "Okay Zed、Cyrus Forbes · OpenAI",
+  "date": "2026-11",
+  "added": "2026-11-20",
+  "signal": 4,
+  "tags": [
+    "故障归因",
+    "反证审查",
+    "工作流"
+  ],
+  "abstract": "自动排障的关键不只是提出可信解释，而是让诊断接受反证，并把任务持续推进到上线后的实际恢复。",
+  "body": [
+    "OpenAI 的 Performance Factory 将性能告警交给 Agent 调查，但不把一份诊断报告当作终点。一次图片请求故障中，调查 Agent 找到了文件定位服务的异常；另一个审查 Agent 却发现，该服务已经恢复，图片请求仍在失败。原解释无法说明持续的故障，任务因此重新进入调查。相关异常不等于足以结案的原因。",
+    "系统把调查、反驳诊断、提出修复拆成不同轮次，并在任务中保存状态与证据。工程师决定合并和部署后，Agent 再检查性能是否回到基线；没有改善就退回调查，部分恢复则为剩余问题另开任务。等待评审或部署时，任务通过事件唤醒接续，不依赖某一次对话始终运行。",
+    "这套机制把“解释合理”与“问题解决”分开，也暴露了自动化的新瓶颈：Agent 能生成的调查多于工程师能审阅的数量。团队因而归并重复事件、按影响排序，并分别评估调查质量与交接摘要。其启发是，扩大调查能力之后，还要让反证有机会推翻结论，让有限的人类注意力用于判断。"
+  ],
+  "highlights": [
+    "相关异常不等于足以结案的原因",
+    "把“解释合理”与“问题解决”分开"
+  ],
+  "limits": "厂商实践复盘，未提供完整对照评估；修复仍需工程师审查，不能据此认定已实现无人值守排障。",
+  "url": "https://openai.com/index/how-openai-performance-factory-keeps-chatgpt-fast/"
+},
+
 /* INSERT-MARKER：新增条目追加在此行之前 */
 ];
 
 // 最近一次新增批次：仅非空新增批次替换；零新增及编辑批次保留。
 window.LATEST_BATCH = {
-  "id": "2026-11-17-定时收录-090249",
+  "id": "2026-11-20-定时收录-090012",
   "ids": [
-    "ai-institutions-cooperation-independent-judgment"
+    "performance-factory-diagnosis-survives-recovery"
   ]
 };
