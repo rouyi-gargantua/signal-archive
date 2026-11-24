@@ -2086,13 +2086,69 @@ window.ENTRIES = [
   "url": "https://openai.com/index/how-openai-performance-factory-keeps-chatgpt-fast/"
 },
 
+{
+  "id": "research-sprint-team-visible-evaluation",
+  "cat": "实践",
+  "title": "AI 加快了研究冲刺，团队为什么更难共同判断？",
+  "title_en": "We Ran a Research Sprint With AI. The AI Worked. The Research Didn't",
+  "org": "Anush Sankaran、Arijit Banerjee（Microsoft）",
+  "date": "2026-11",
+  "added": "2026-11-24",
+  "signal": 4,
+  "tags": [
+    "团队研究",
+    "人机协作",
+    "证据审查"
+  ],
+  "abstract": "当研究者各自用 AI 加速时，产出可以先汇到一起，形成这些产出的证据、假设和取舍却未必能被团队共同检验。",
+  "body": [
+    "两位微软研究者让12名应用 AI 研究员分成三个小组，在100分钟内完成一次从选题到写作的研究冲刺。三组都提到难以及时消化 AI 产出。观察员记录的33次交互里，1次原样采纳、5次记录为修改、27次没有留下处置记录。这些空白可能来自私下判断、延后处理或记录遗漏。",
+    "有一组拿到 AI 汇总的假设时，成员看到缩写却缺少解释。另一组在等待队友选定数据集。作者从这些片段提出一个团队层面的解释：个人在自己的对话里把问题推进得越远，队友就越需要补读其中的背景，才能检验结论是否成立。汇总文档可以传递结果，形成结果的理由仍可能留在各人的对话里。",
+    "一条并行运行的自主流程在会内生成了完整草稿，草稿与团队产出均未经独立质量评分。作者由此提出让关键证据、备选解释和采纳决定对团队可见，使成员能就同一个判断提出异议。这项设计把共同判断作为研究协作的一部分，效果还有待后续实验。"
+  ],
+  "highlights": [
+    "形成结果的理由仍可能留在各人的对话里",
+    "让关键证据、备选解释和采纳决定对团队可见"
+  ],
+  "limits": "试点仅涉及同一机构的一场限时活动，缺少无 AI 对照，AI、时间压力和原有协作方式的影响仍待区分。",
+  "url": "https://arxiv.org/abs/2611.03946"
+},
+
+{
+  "id": "evaluation-objective-awareness-production-gap",
+  "cat": "理论",
+  "title": "模型猜测自己在考什么，会改变安全评测的结果",
+  "title_en": "Eval-production behavior gaps in agent safety and the role of eval-awareness",
+  "org": "Joy Hsu、Sam Arnesen（OpenAI）",
+  "date": "2026-11",
+  "added": "2026-11-24",
+  "signal": 4,
+  "tags": [
+    "安全评测",
+    "模型行为",
+    "生产对照"
+  ],
+  "abstract": "在一组智能体安全试验中，模型对考查目标的不同理解显著改变了表现，也提供了一种理解离线分数与生产行为落差的线索。",
+  "body": [
+    "OpenAI 从去标识化的 Codex 使用记录中筛选与离线题目决策结构相近的生产片段。研究关注智能体遇到限制后是否遵守其适用范围。所测六个模型在离线评测中的成功率都低于各自匹配的生产样本，差幅为10.2至37.4个百分点。模型之间的表现仍呈正相关，因此离线分数在这批样本中保留了一定的相对比较价值。",
+    "作者用同一个模型做干预。只告知模型正在接受评测，成功率与原设置接近。明确提示正确的考查目标时，成功率从63.4%升至91.6%。提示与任务要求相反的考查目标时，成功率降至17.6%。这组对照把知道正在考试与判断考什么区分开来，后者足以在该设置中改变行为。",
+    "这给安全分数增加了一层解释：相同的行为选择进入测评环境后，模型可能会根据自己对题意的推测重新判断应遵守什么。生产片段与离线题目的匹配仍有差异，模型明确说出的猜测也只覆盖可观察到的推理。作者把目标理解视为差距的一种可能来源，实际贡献还需在更多任务和模型上核验。"
+  ],
+  "highlights": [
+    "离线分数在这批样本中保留了一定的相对比较价值",
+    "知道正在考试与判断考什么"
+  ],
+  "url": "https://openai.com/safety-alignment/eval-production-behavior-gap/"
+},
+
 /* INSERT-MARKER：新增条目追加在此行之前 */
 ];
 
 // 最近一次新增批次：仅非空新增批次替换；零新增及编辑批次保留。
 window.LATEST_BATCH = {
-  "id": "2026-11-20-定时收录-090012",
+  "id": "2026-11-24-定时收录-085853",
   "ids": [
-    "performance-factory-diagnosis-survives-recovery"
+    "research-sprint-team-visible-evaluation",
+    "evaluation-objective-awareness-production-gap"
   ]
 };
